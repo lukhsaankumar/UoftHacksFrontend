@@ -128,12 +128,25 @@ export interface NewProductData {
   confidenceScore: number;
 }
 
+export interface TrendMatch {
+  trendId: string;
+  trendName: string;
+  platforms: string[];
+  demographics: string[];
+  matchingKeywords: string[];
+  colorPalette: string[];
+}
+
 export interface DescriptionChangeData {
   productId: number;
+  variantId?: number;
   productTitle: string;
   currentDescription: string;
   newDescription: string;
+  newTags?: string[];
   reason: string;
+  trendSource?: string;
+  trendMatch?: TrendMatch;
   confidenceScore: number;
 }
 

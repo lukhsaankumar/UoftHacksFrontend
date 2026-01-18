@@ -185,13 +185,60 @@ button, a {
 .suggestions-grid {
   display: grid;
   gap: 24px;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
 }
 
 @media (max-width: 768px) {
   .suggestions-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Description previews for HTML content */
+.suggestion-description-preview,
+.product-description-preview {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #202223;
+}
+
+.suggestion-description-preview p,
+.product-description-preview p {
+  margin-bottom: 0.75em;
+}
+
+.suggestion-description-preview p:last-child,
+.product-description-preview p:last-child {
+  margin-bottom: 0;
+}
+
+.suggestion-description-preview strong,
+.product-description-preview strong {
+  font-weight: 600;
+}
+
+.suggestion-description-preview em,
+.product-description-preview em {
+  font-style: italic;
+}
+
+.suggestion-description-preview ul,
+.product-description-preview ul {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+  list-style-type: disc;
+}
+
+.suggestion-description-preview li,
+.product-description-preview li {
+  margin-bottom: 0.25em;
+}
+
+.suggestion-description-preview.aura-enhanced,
+.product-description-preview.aura-enhanced {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  border-radius: 8px;
+  padding: 12px;
 }
 
 /* Responsive adjustments */
