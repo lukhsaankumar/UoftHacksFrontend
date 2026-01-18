@@ -11,9 +11,10 @@ import {
   Box,
   InlineGrid,
 } from '@shopify/polaris';
-import { ProductIcon, MagicIcon, ChartVerticalFilledIcon } from '@shopify/polaris-icons';
+import { ProductIcon, MagicIcon, ChartVerticalFilledIcon, LightbulbIcon } from '@shopify/polaris-icons';
 import { TrendsPanel } from './TrendsPanel';
 import { MarketingPanel } from './MarketingPanel';
+import { SuggestionsPanel } from './SuggestionsPanel';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -91,6 +92,10 @@ export function HomePage() {
               </BlockStack>
             </Card>
           </InlineGrid>
+        </Layout.Section>
+
+        <Layout.Section>
+          <SuggestionsPanel />
         </Layout.Section>
 
         <Layout.Section>
