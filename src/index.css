@@ -52,6 +52,40 @@
   height: 16px;
 }
 
+/* Suggestions icon styling */
+.suggestions-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2));
+  border-radius: 8px;
+}
+
+.suggestions-icon svg {
+  fill: #f59e0b;
+  width: 16px;
+  height: 16px;
+}
+
+/* Marketing icon styling */
+.marketing-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.2));
+  border-radius: 8px;
+}
+
+.marketing-icon svg {
+  fill: #8b5cf6;
+  width: 16px;
+  height: 16px;
+}
+
 /* Product description styling */
 .product-description {
   font-size: 14px;
@@ -145,6 +179,19 @@ button, a {
 
 .aura-pulse {
   animation: aura-pulse 2s infinite;
+}
+
+/* Suggestions grid */
+.suggestions-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .suggestions-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Responsive adjustments */

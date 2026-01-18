@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import { HomePage } from "./components/HomePage";
 import { ProductList } from "./components/ProductList";
 import { ProductAiPage } from "./components/ProductAiPage";
+import { SuggestionsPage } from "./components/SuggestionsPage";
 import { ShopifyAppBridgeProvider } from "./components/AppBridgeProvider";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/app" element={<HomePage />} />
             <Route path="/app/products" element={<ProductList />} />
             <Route path="/app/products/:id" element={<ProductAiPage />} />
+            <Route path="/app/suggestions" element={<SuggestionsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
