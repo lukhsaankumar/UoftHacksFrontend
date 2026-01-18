@@ -8,6 +8,8 @@ import {
   Banner,
   Icon,
   Box,
+  Badge,
+  ProgressBar,
 } from '@shopify/polaris';
 import { ChartPopularIcon } from '@shopify/polaris-icons';
 import { getTrends, Trend } from '@/lib/api';
@@ -22,26 +24,47 @@ export function TrendsPanel() {
       try {
         setLoading(true);
         const data = await getTrends();
-        setTrends(data);
+        setTrends(data.trends);
         setError(null);
       } catch (err) {
         setError('Failed to load trend insights. Please try again.');
         // Mock data for demo
         setTrends([
           {
-            id: 'trend-1',
-            title: 'Aura Fashion',
-            description: 'Customers respond strongly to aspirational, mood-based copy that evokes emotion.',
+            id: 'trend_001',
+            name: 'Aura Aesthetic',
+            platforms: ['TikTok', 'Instagram'],
+            keywords: ['ethereal', 'mystical', 'dreamy', 'soft', 'vintage'],
+            target_products: ['trench coats', 'blazers', 'silk blouses', 'maxi skirts'],
+            color_palette: ['lavender', 'sage', 'cream', 'dusty rose'],
+            hashtags: ['#AuraAesthetic', '#EtherealFashion', '#DreamyVibes'],
+            marketing_angle: 'Channel your inner mystique with timeless elegance',
+            popularity_score: 92,
+            growth_rate: 15.5,
           },
           {
-            id: 'trend-2',
-            title: 'Sustainable Luxury',
-            description: 'Eco-conscious messaging paired with premium positioning drives conversions.',
+            id: 'trend_002',
+            name: 'Gorpcore',
+            platforms: ['TikTok', 'Instagram', 'Pinterest'],
+            keywords: ['outdoor', 'utility', 'hiking', 'functional', 'technical'],
+            target_products: ['fleece jackets', 'cargo pants', 'hiking boots', 'puffer vests'],
+            color_palette: ['forest green', 'burnt orange', 'navy', 'khaki'],
+            hashtags: ['#Gorpcore', '#OutdoorStyle', '#HikingFashion'],
+            marketing_angle: 'Adventure-ready style for the urban explorer',
+            popularity_score: 88,
+            growth_rate: 22.3,
           },
           {
-            id: 'trend-3',
-            title: 'Minimalist Elegance',
-            description: 'Clean, refined descriptions with focused benefits outperform lengthy details.',
+            id: 'trend_003',
+            name: 'Quiet Luxury',
+            platforms: ['Instagram', 'Pinterest'],
+            keywords: ['minimalist', 'understated', 'quality', 'timeless', 'elegant'],
+            target_products: ['cashmere sweaters', 'wool coats', 'leather bags', 'silk scarves'],
+            color_palette: ['camel', 'black', 'ivory', 'charcoal'],
+            hashtags: ['#QuietLuxury', '#OldMoney', '#StealthWealth'],
+            marketing_angle: 'Effortless sophistication that speaks for itself',
+            popularity_score: 85,
+            growth_rate: 18.7,
           },
         ]);
       } finally {
@@ -68,19 +91,19 @@ export function TrendsPanel() {
     <Card>
       <BlockStack gap="400">
         <InlineStack gap="200" align="start" blockAlign="center">
-          <div className="trends-icon">
+          <div className="trends-icon" aria-hidden="true">
             <Icon source={ChartPopularIcon} tone="base" />
           </div>
           <Text variant="headingMd" as="h2">Current Trend Insights</Text>
         </InlineStack>
 
         {error && (
-          <Banner tone="warning">
+          <Banner tone="warning" onDismiss={() => setError(null)}>
             {error}
           </Banner>
         )}
 
-        <BlockStack gap="300">
+        <BlockStack gap="400">
           {trends.map((trend) => (
             <Box
               key={trend.id}
@@ -88,13 +111,50 @@ export function TrendsPanel() {
               background="bg-surface-secondary"
               borderRadius="200"
             >
-              <BlockStack gap="100">
-                <Text variant="headingSm" as="h3" fontWeight="semibold">
-                  {trend.title}
-                </Text>
+              <BlockStack gap="300">
+                <InlineStack gap="200" align="space-between" blockAlign="center" wrap={false}>
+                  <InlineStack gap="200" blockAlign="center">
+                    <Text variant="headingSm" as="h3" fontWeight="semibold">
+                      {trend.name}
+                    </Text>
+                    <Badge tone="success">{`+${trend.growth_rate}%`}</Badge>
+                  </InlineStack>
+                  <InlineStack gap="100">
+                    {trend.platforms.map((platform) => (
+                      <Badge key={platform} tone="info">{platform}</Badge>
+                    ))}
+                  </InlineStack>
+                </InlineStack>
+
                 <Text variant="bodyMd" as="p" tone="subdued">
-                  {trend.description}
+                  {trend.marketing_angle}
                 </Text>
+
+                <BlockStack gap="100">
+                  <InlineStack gap="200" blockAlign="center">
+                    <Text variant="bodySm" as="span">Popularity</Text>
+                    <Text variant="bodySm" as="span" fontWeight="semibold">{trend.popularity_score}%</Text>
+                  </InlineStack>
+                  <ProgressBar 
+                    progress={trend.popularity_score} 
+                    size="small" 
+                    tone="primary"
+                  />
+                </BlockStack>
+
+                <InlineStack gap="100" wrap>
+                  {trend.keywords.slice(0, 4).map((keyword) => (
+                    <Badge key={keyword}>{keyword}</Badge>
+                  ))}
+                </InlineStack>
+
+                <InlineStack gap="100" wrap>
+                  {trend.hashtags.slice(0, 3).map((hashtag) => (
+                    <Text key={hashtag} variant="bodySm" as="span" tone="subdued">
+                      {hashtag}
+                    </Text>
+                  ))}
+                </InlineStack>
               </BlockStack>
             </Box>
           ))}
