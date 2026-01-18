@@ -96,12 +96,17 @@ export function SuggestionsPage() {
   const handleAccept = async (id: string) => {
     try {
       setActionLoading(id);
-      await acceptSuggestion(id);
-      setSuggestions(prev => prev.filter(s => s._id !== id));
-      showToast('Suggestion accepted successfully!');
-    } catch (err) {
-      setSuggestions(prev => prev.filter(s => s._id !== id));
-      showToast('Suggestion accepted successfully!');
+      const response = await acceptSuggestion(id);
+      if (response.success) {
+        setSuggestions(prev => prev.filter(s => s._id !== id));
+        showToast('Suggestion accepted and applied to Shopify!');
+      } else {
+        showToast(response.error || 'Failed to apply suggestion', true);
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to accept suggestion';
+      console.error('Accept suggestion error:', err);
+      showToast(errorMessage, true);
     } finally {
       setActionLoading(null);
     }
@@ -110,12 +115,17 @@ export function SuggestionsPage() {
   const handleReject = async (id: string) => {
     try {
       setActionLoading(id);
-      await rejectSuggestion(id);
-      setSuggestions(prev => prev.filter(s => s._id !== id));
-      showToast('Suggestion dismissed');
-    } catch (err) {
-      setSuggestions(prev => prev.filter(s => s._id !== id));
-      showToast('Suggestion dismissed');
+      const response = await rejectSuggestion(id);
+      if (response.success) {
+        setSuggestions(prev => prev.filter(s => s._id !== id));
+        showToast('Suggestion dismissed');
+      } else {
+        showToast('Failed to dismiss suggestion', true);
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to reject suggestion';
+      console.error('Reject suggestion error:', err);
+      showToast(errorMessage, true);
     } finally {
       setActionLoading(null);
     }

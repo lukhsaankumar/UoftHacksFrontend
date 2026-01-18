@@ -200,12 +200,27 @@ export const getSuggestions = async (): Promise<Suggestion[]> => {
   return response.data.suggestions;
 };
 
-export const acceptSuggestion = async (id: string): Promise<void> => {
-  await api.post(`/suggestions/${encodeURIComponent(id)}/accept`);
+export interface AcceptSuggestionResponse {
+  success: boolean;
+  suggestion: Suggestion;
+  message: string;
+  error?: string;
+}
+
+export const acceptSuggestion = async (id: string): Promise<AcceptSuggestionResponse> => {
+  const response = await api.post<AcceptSuggestionResponse>(`/suggestions/${encodeURIComponent(id)}/accept`);
+  return response.data;
 };
 
-export const rejectSuggestion = async (id: string): Promise<void> => {
-  await api.post(`/suggestions/${encodeURIComponent(id)}/reject`);
+export interface RejectSuggestionResponse {
+  success: boolean;
+  suggestion: Suggestion;
+  message: string;
+}
+
+export const rejectSuggestion = async (id: string): Promise<RejectSuggestionResponse> => {
+  const response = await api.post<RejectSuggestionResponse>(`/suggestions/${encodeURIComponent(id)}/reject`);
+  return response.data;
 };
 
 // Health check
