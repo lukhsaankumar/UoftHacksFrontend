@@ -17,6 +17,7 @@ import {
   InlineGrid,
 } from '@shopify/polaris';
 import { getProduct, generateAura, applyAura, revertAura, ProductDetail } from '@/lib/api';
+import { ProductPreview } from './ProductPreview';
 
 export function ProductAiPage() {
   const { id } = useParams<{ id: string }>();
@@ -312,6 +313,18 @@ export function ProductAiPage() {
             </Card>
           </Layout.Section>
         )}
+
+        {/* Storefront Preview Section */}
+        <Layout.Section>
+          <ProductPreview
+            product={{
+              id: product.id,
+              title: product.title,
+              descriptionHtml: product.descriptionHtml,
+            }}
+            aiProposal={aiProposal}
+          />
+        </Layout.Section>
       </Layout>
     </Page>
   );
