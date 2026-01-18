@@ -128,14 +128,25 @@ export interface NewProductData {
   confidenceScore: number;
 }
 
+export interface TrendMatch {
+  trendId: string;
+  trendName: string;
+  platforms: string[];
+  demographics: string[];
+  matchingKeywords: string[];
+  colorPalette: string[];
+}
+
 export interface DescriptionChangeData {
   productId: number;
+  variantId?: number;
   productTitle: string;
   currentDescription: string;
   newDescription: string;
   newTags?: string[];
   reason: string;
   trendSource?: string;
+<<<<<<< HEAD
   trendMatch?: {
     trendId: string;
     trendName: string;
@@ -144,6 +155,9 @@ export interface DescriptionChangeData {
     matchingKeywords?: string[];
     colorPalette?: string[];
   };
+=======
+  trendMatch?: TrendMatch;
+>>>>>>> 108ee2eb57d0aca5e8e08ede80c2708ee0b69a64
   confidenceScore: number;
 }
 
