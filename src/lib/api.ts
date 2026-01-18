@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://uofthacks-hhcs.onrender.com';
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`,
@@ -62,6 +62,11 @@ export interface Product {
   status?: string;
 }
 
+export interface ProductsResponse {
+  success: boolean;
+  products: Product[];
+}
+
 export interface AiProposal {
   auraTitle: string;
   auraDescriptionHtml: string;
@@ -81,11 +86,13 @@ export interface ProductDetail {
 // Suggestion Types
 export interface NewProduct {
   title: string;
-  description: string;
+  description?: string;
+  body_html?: string;
   vendor: string;
-  product_type: string;
-  tags: string[];
-  images: string[];
+  product_type?: string;
+  tags?: string[];
+  images?: string[];
+  status?: string;
 }
 
 export interface ReplaceProductData {
@@ -93,7 +100,7 @@ export interface ReplaceProductData {
   productTitle: string;
   newProduct: NewProduct;
   reason: string;
-  trendSource: string;
+  trendSource?: string;
   confidenceScore: number;
 }
 
@@ -102,29 +109,67 @@ export interface PriceChangeData {
   variantId: number;
   productTitle: string;
   currentPrice: number;
-  newPrice: number;
+  newPrice: number | string;
   reason: string;
-  trendSource: string;
+  trendSource?: string;
   confidenceScore: number;
 }
 
-export interface Suggestion {
-  _id: string;
-  type: 'replace-product' | 'price-change';
-  data: ReplaceProductData | PriceChangeData;
-  status: 'pending' | 'accepted' | 'rejected';
-  createdAt: string;
+export interface NewProductData {
+  product: {
+    title: string;
+    body_html: string;
+    vendor: string;
+    product_type: string;
+    tags: string[];
+    status: string;
+  };
+  reason: string;
+  confidenceScore: number;
 }
 
+export interface DescriptionChangeData {
+  productId: number;
+  productTitle: string;
+  currentDescription: string;
+  newDescription: string;
+  reason: string;
+  confidenceScore: number;
+}
+
+export type SuggestionType = 'replace-product' | 'price-change' | 'new-product' | 'description-change';
+
+export interface Suggestion {
+  _id: string;
+  type: SuggestionType;
+  data: ReplaceProductData | PriceChangeData | NewProductData | DescriptionChangeData;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+  acceptedAt?: string;
+  rejectedAt?: string;
+}
+
+export interface SuggestionsResponse {
+  success: boolean;
+  suggestions: Suggestion[];
+}
+
+// API Functions
+
 export const getTrends = async (): Promise<TrendsResponse> => {
-  const response = await api.get('/trends/');
+  const response = await api.get('/trends');
   return response.data;
 };
 
 export const getMarketingProducts = async (): Promise<MarketingProduct[]> => {
-  // For now, load from local sample data
-  const response = await import('@/data/sample_marketing.json');
-  return response.default as MarketingProduct[];
+  // This endpoint may need to be implemented on backend
+  // For now, try to fetch from API, fallback to empty array
+  try {
+    const response = await api.get('/marketing');
+    return response.data.products || [];
+  } catch {
+    return [];
+  }
 };
 
 export const getProducts = async (): Promise<Product[]> => {
@@ -151,14 +196,8 @@ export const revertAura = async (id: string): Promise<void> => {
 
 // Suggestions API
 export const getSuggestions = async (): Promise<Suggestion[]> => {
-  try {
-    const response = await api.get('/suggestions');
-    return response.data.suggestions;
-  } catch {
-    // Fallback to local sample data
-    const response = await import('@/data/sample_suggestions.json');
-    return response.default as Suggestion[];
-  }
+  const response = await api.get<SuggestionsResponse>('/suggestions');
+  return response.data.suggestions;
 };
 
 export const acceptSuggestion = async (id: string): Promise<void> => {
@@ -167,6 +206,12 @@ export const acceptSuggestion = async (id: string): Promise<void> => {
 
 export const rejectSuggestion = async (id: string): Promise<void> => {
   await api.post(`/suggestions/${encodeURIComponent(id)}/reject`);
+};
+
+// Health check
+export const healthCheck = async (): Promise<{ success: boolean }> => {
+  const response = await api.get('/health');
+  return response.data;
 };
 
 export default api;

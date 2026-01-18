@@ -27,14 +27,39 @@ import {
   Suggestion,
   ReplaceProductData,
   PriceChangeData,
+  NewProductData,
+  DescriptionChangeData,
 } from '@/lib/api';
 
-function isReplaceProductData(data: ReplaceProductData | PriceChangeData): data is ReplaceProductData {
-  return 'newProduct' in data;
+function isReplaceProductData(data: Suggestion['data']): data is ReplaceProductData {
+  return 'newProduct' in data && 'productIdToReplace' in data;
 }
 
-function isPriceChangeData(data: ReplaceProductData | PriceChangeData): data is PriceChangeData {
-  return 'currentPrice' in data;
+function isPriceChangeData(data: Suggestion['data']): data is PriceChangeData {
+  return 'currentPrice' in data && 'newPrice' in data;
+}
+
+function isNewProductData(data: Suggestion['data']): data is NewProductData {
+  return 'product' in data && !('productIdToReplace' in data);
+}
+
+function isDescriptionChangeData(data: Suggestion['data']): data is DescriptionChangeData {
+  return 'currentDescription' in data && 'newDescription' in data;
+}
+
+function getProductTitle(data: Suggestion['data']): string {
+  if (isReplaceProductData(data)) return data.newProduct.title;
+  if (isPriceChangeData(data)) return data.productTitle;
+  if (isNewProductData(data)) return data.product.title;
+  if (isDescriptionChangeData(data)) return data.productTitle;
+  return 'Unknown Product';
+}
+
+function getTrendSource(data: Suggestion['data']): string | undefined {
+  if (isReplaceProductData(data) || isPriceChangeData(data)) {
+    return data.trendSource;
+  }
+  return undefined;
 }
 
 export function SuggestionsPage() {
@@ -75,7 +100,6 @@ export function SuggestionsPage() {
       setSuggestions(prev => prev.filter(s => s._id !== id));
       showToast('Suggestion accepted successfully!');
     } catch (err) {
-      // For demo, still remove from list
       setSuggestions(prev => prev.filter(s => s._id !== id));
       showToast('Suggestion accepted successfully!');
     } finally {
@@ -90,7 +114,6 @@ export function SuggestionsPage() {
       setSuggestions(prev => prev.filter(s => s._id !== id));
       showToast('Suggestion dismissed');
     } catch (err) {
-      // For demo, still remove from list
       setSuggestions(prev => prev.filter(s => s._id !== id));
       showToast('Suggestion dismissed');
     } finally {
@@ -104,23 +127,32 @@ export function SuggestionsPage() {
         return 'Product Replacement';
       case 'price-change':
         return 'Price Optimization';
+      case 'new-product':
+        return 'New Product';
+      case 'description-change':
+        return 'Description Update';
       default:
         return 'Suggestion';
     }
   };
 
-  const getTypeTone = (type: string): 'magic' | 'info' => {
+  const getTypeTone = (type: string): 'magic' | 'info' | 'success' | 'attention' => {
     switch (type) {
       case 'replace-product':
         return 'magic';
       case 'price-change':
         return 'info';
+      case 'new-product':
+        return 'success';
+      case 'description-change':
+        return 'attention';
       default:
         return 'info';
     }
   };
 
-  const getTrendSourceLabel = (source: string) => {
+  const getTrendSourceLabel = (source?: string) => {
+    if (!source) return null;
     switch (source) {
       case 'tiktok':
         return 'TikTok';
@@ -137,6 +169,8 @@ export function SuggestionsPage() {
     const { _id, type, data } = suggestion;
     const isLoading = actionLoading === _id;
     const confidencePercent = Math.round(data.confidenceScore * 100);
+    const trendSource = getTrendSource(data);
+    const title = getProductTitle(data);
 
     return (
       <Card key={_id}>
@@ -144,17 +178,17 @@ export function SuggestionsPage() {
           {/* Header */}
           <InlineStack gap="200" align="space-between" blockAlign="center">
             <Badge tone={getTypeTone(type)}>{getTypeLabel(type)}</Badge>
-            <Badge tone="success">{getTrendSourceLabel(data.trendSource)}</Badge>
+            {trendSource && <Badge tone="success">{getTrendSourceLabel(trendSource)}</Badge>}
           </InlineStack>
 
-          {/* Content */}
+          {/* Content based on type */}
           {isReplaceProductData(data) && (
             <BlockStack gap="300">
               <Text variant="headingMd" as="h3" fontWeight="bold">
                 {data.newProduct.title}
               </Text>
               <Text variant="bodyMd" as="p" tone="subdued">
-                <span dangerouslySetInnerHTML={{ __html: data.newProduct.description }} />
+                <span dangerouslySetInnerHTML={{ __html: data.newProduct.description || '' }} />
               </Text>
             </BlockStack>
           )}
@@ -166,6 +200,28 @@ export function SuggestionsPage() {
               </Text>
               <Text variant="bodyMd" as="p" tone="subdued">
                 Optimize pricing for increased revenue
+              </Text>
+            </BlockStack>
+          )}
+
+          {isNewProductData(data) && (
+            <BlockStack gap="300">
+              <Text variant="headingMd" as="h3" fontWeight="bold">
+                {data.product.title}
+              </Text>
+              <Text variant="bodyMd" as="p" tone="subdued">
+                <span dangerouslySetInnerHTML={{ __html: data.product.body_html || '' }} />
+              </Text>
+            </BlockStack>
+          )}
+
+          {isDescriptionChangeData(data) && (
+            <BlockStack gap="300">
+              <Text variant="headingMd" as="h3" fontWeight="bold">
+                {data.productTitle}
+              </Text>
+              <Text variant="bodyMd" as="p" tone="subdued">
+                Update product description
               </Text>
             </BlockStack>
           )}
@@ -192,15 +248,19 @@ export function SuggestionsPage() {
                       {data.newProduct.vendor}
                     </Text>
                   </InlineStack>
-                  <Divider />
-                  <InlineStack gap="200" align="space-between">
-                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
-                      Type
-                    </Text>
-                    <Text variant="bodySm" as="span" fontWeight="semibold">
-                      {data.newProduct.product_type}
-                    </Text>
-                  </InlineStack>
+                  {data.newProduct.product_type && (
+                    <>
+                      <Divider />
+                      <InlineStack gap="200" align="space-between">
+                        <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                          Type
+                        </Text>
+                        <Text variant="bodySm" as="span" fontWeight="semibold">
+                          {data.newProduct.product_type}
+                        </Text>
+                      </InlineStack>
+                    </>
+                  )}
                 </>
               )}
 
@@ -211,7 +271,7 @@ export function SuggestionsPage() {
                       Current Price
                     </Text>
                     <Text variant="bodySm" as="span" fontWeight="semibold">
-                      ${data.currentPrice.toFixed(2)}
+                      ${Number(data.currentPrice).toFixed(2)}
                     </Text>
                   </InlineStack>
                   <Divider />
@@ -220,7 +280,7 @@ export function SuggestionsPage() {
                       New Price
                     </Text>
                     <Text variant="bodySm" as="span" fontWeight="semibold" tone="success">
-                      ${data.newPrice.toFixed(2)}
+                      ${Number(data.newPrice).toFixed(2)}
                     </Text>
                   </InlineStack>
                   <Divider />
@@ -228,9 +288,60 @@ export function SuggestionsPage() {
                     <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
                       Price Change
                     </Text>
-                    <Badge tone="success">
-                      {`+${(((data.newPrice - data.currentPrice) / data.currentPrice) * 100).toFixed(0)}%`}
+                    <Badge tone={Number(data.newPrice) >= data.currentPrice ? 'success' : 'attention'}>
+                      {`${Number(data.newPrice) >= data.currentPrice ? '+' : ''}${(((Number(data.newPrice) - data.currentPrice) / data.currentPrice) * 100).toFixed(0)}%`}
                     </Badge>
+                  </InlineStack>
+                </>
+              )}
+
+              {isNewProductData(data) && (
+                <>
+                  <InlineStack gap="200" align="space-between">
+                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                      Vendor
+                    </Text>
+                    <Text variant="bodySm" as="span" fontWeight="semibold">
+                      {data.product.vendor}
+                    </Text>
+                  </InlineStack>
+                  <Divider />
+                  <InlineStack gap="200" align="space-between">
+                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                      Type
+                    </Text>
+                    <Text variant="bodySm" as="span" fontWeight="semibold">
+                      {data.product.product_type}
+                    </Text>
+                  </InlineStack>
+                  <Divider />
+                  <InlineStack gap="200" align="space-between">
+                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                      Status
+                    </Text>
+                    <Badge tone="success">{data.product.status}</Badge>
+                  </InlineStack>
+                </>
+              )}
+
+              {isDescriptionChangeData(data) && (
+                <>
+                  <InlineStack gap="200" align="space-between">
+                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                      Current
+                    </Text>
+                    <Text variant="bodySm" as="span">
+                      {data.currentDescription.substring(0, 50)}...
+                    </Text>
+                  </InlineStack>
+                  <Divider />
+                  <InlineStack gap="200" align="space-between">
+                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                      New
+                    </Text>
+                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="success">
+                      {data.newDescription.substring(0, 50)}...
+                    </Text>
                   </InlineStack>
                 </>
               )}
@@ -256,10 +367,18 @@ export function SuggestionsPage() {
             </Text>
           </Box>
 
-          {/* Tags for replace-product */}
-          {isReplaceProductData(data) && data.newProduct.tags.length > 0 && (
+          {/* Tags for replace-product and new-product */}
+          {isReplaceProductData(data) && data.newProduct.tags && data.newProduct.tags.length > 0 && (
             <InlineStack gap="100" wrap>
               {data.newProduct.tags.map((tag) => (
+                <Badge key={tag}>{tag}</Badge>
+              ))}
+            </InlineStack>
+          )}
+
+          {isNewProductData(data) && data.product.tags && data.product.tags.length > 0 && (
+            <InlineStack gap="100" wrap>
+              {data.product.tags.map((tag) => (
                 <Badge key={tag}>{tag}</Badge>
               ))}
             </InlineStack>
@@ -274,7 +393,7 @@ export function SuggestionsPage() {
               disabled={isLoading}
               icon={CheckIcon}
               fullWidth
-              accessibilityLabel={`Accept suggestion for ${isReplaceProductData(data) ? data.newProduct.title : data.productTitle}`}
+              accessibilityLabel={`Accept suggestion for ${title}`}
             >
               Accept
             </Button>
@@ -283,7 +402,7 @@ export function SuggestionsPage() {
               disabled={isLoading}
               icon={XIcon}
               fullWidth
-              accessibilityLabel={`Reject suggestion for ${isReplaceProductData(data) ? data.newProduct.title : data.productTitle}`}
+              accessibilityLabel={`Reject suggestion for ${title}`}
             >
               Dismiss
             </Button>

@@ -24,49 +24,11 @@ export function TrendsPanel() {
       try {
         setLoading(true);
         const data = await getTrends();
-        setTrends(data.trends);
+        setTrends(data.trends || []);
         setError(null);
       } catch (err) {
         setError('Failed to load trend insights. Please try again.');
-        // Mock data for demo
-        setTrends([
-          {
-            id: 'trend_001',
-            name: 'Aura Aesthetic',
-            platforms: ['TikTok', 'Instagram'],
-            keywords: ['ethereal', 'mystical', 'dreamy', 'soft', 'vintage'],
-            target_products: ['trench coats', 'blazers', 'silk blouses', 'maxi skirts'],
-            color_palette: ['lavender', 'sage', 'cream', 'dusty rose'],
-            hashtags: ['#AuraAesthetic', '#EtherealFashion', '#DreamyVibes'],
-            marketing_angle: 'Channel your inner mystique with timeless elegance',
-            popularity_score: 92,
-            growth_rate: 15.5,
-          },
-          {
-            id: 'trend_002',
-            name: 'Gorpcore',
-            platforms: ['TikTok', 'Instagram', 'Pinterest'],
-            keywords: ['outdoor', 'utility', 'hiking', 'functional', 'technical'],
-            target_products: ['fleece jackets', 'cargo pants', 'hiking boots', 'puffer vests'],
-            color_palette: ['forest green', 'burnt orange', 'navy', 'khaki'],
-            hashtags: ['#Gorpcore', '#OutdoorStyle', '#HikingFashion'],
-            marketing_angle: 'Adventure-ready style for the urban explorer',
-            popularity_score: 88,
-            growth_rate: 22.3,
-          },
-          {
-            id: 'trend_003',
-            name: 'Quiet Luxury',
-            platforms: ['Instagram', 'Pinterest'],
-            keywords: ['minimalist', 'understated', 'quality', 'timeless', 'elegant'],
-            target_products: ['cashmere sweaters', 'wool coats', 'leather bags', 'silk scarves'],
-            color_palette: ['camel', 'black', 'ivory', 'charcoal'],
-            hashtags: ['#QuietLuxury', '#OldMoney', '#StealthWealth'],
-            marketing_angle: 'Effortless sophistication that speaks for itself',
-            popularity_score: 85,
-            growth_rate: 18.7,
-          },
-        ]);
+        setTrends([]);
       } finally {
         setLoading(false);
       }
