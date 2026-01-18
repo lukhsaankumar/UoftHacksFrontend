@@ -133,7 +133,17 @@ export interface DescriptionChangeData {
   productTitle: string;
   currentDescription: string;
   newDescription: string;
+  newTags?: string[];
   reason: string;
+  trendSource?: string;
+  trendMatch?: {
+    trendId: string;
+    trendName: string;
+    platforms?: string[];
+    demographics?: string[];
+    matchingKeywords?: string[];
+    colorPalette?: string[];
+  };
   confidenceScore: number;
 }
 

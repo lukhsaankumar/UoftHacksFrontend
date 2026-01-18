@@ -1,26 +1,25 @@
-[
-  {
-    "success": true,
-    "product_id": "gid://shopify/Product/123456789",
-    "trend_name": "Aura Aesthetic",
-    "original": {
-      "title": "Classic Trench Coat",
-      "description": "A timeless trench coat made from premium cotton blend."
+{
+  "_id": "demo1",
+  "type": "description-change",
+  "data": {
+    "productId": 9267765608706,
+    "variantId": 47234969895170,
+    "productTitle": "Trench Coat",
+    "currentDescription": "<p><meta charset=\"utf-8\">A <strong data-start=\"2\" data-end=\"17\">trench coat</strong> is a long, lightweight coat traditionally made from water-resistant fabric, designed to protect against rain and wind. It typically features a <strong data-start=\"161\" data-end=\"186\">double-breasted front</strong>, <strong data-start=\"188\" data-end=\"203\">wide lapels</strong>, <strong data-start=\"205\" data-end=\"228\">shoulder epaulettes</strong>, <strong data-start=\"230\" data-end=\"248\">a belted waist</strong>, and often <strong data-start=\"260\" data-end=\"275\">storm flaps</strong> for added protection.</p>",
+    "newDescription": "<p>✨ <strong>Cultivate Your Aura</strong> ✨</p><p>Embrace <em>mysterious elegance</em> with this timeless trench coat — a cornerstone of the <strong>dark academia</strong> aesthetic. Crafted from premium water-resistant fabric, this sophisticated piece features a double-breasted front, wide lapels, shoulder epaulettes, and a cinched belted waist that exudes an air of <em>ethereal sophistication</em>.</p><p>Whether you're strolling through misty streets or making an entrance at a candlelit gathering, this coat transforms every moment into a scene from a vintage novel.</p><p><strong>Why You'll Love It:</strong></p><ul><li>🌙 Perfect for the Aura Aesthetic</li><li>📚 Dark academia staple</li><li>🎭 Timeless, mysterious silhouette</li><li>💨 Water-resistant & lightweight</li></ul><p><em>\"For those who carry an air of mystery wherever they go.\"</em></p><p>#aura #darkacademia #mysterious #ethereal #timelesssophistication</p>",
+    "newTags": ["aura", "dark academia", "mysterious", "ethereal", "vintage", "sophisticated", "timeless", "trending", "coats"],
+    "reason": "Product perfectly aligns with 'Aura Aesthetic' trend (95% popularity score). Trench coats are a target product for this trend. Optimized description emphasizes mystery, sophistication, and timeless elegance per trend marketing angle.",
+    "trendSource": "trend_001 - Aura Aesthetic",
+    "trendMatch": {
+      "trendId": "trend_001",
+      "trendName": "Aura Aesthetic",
+      "platforms": ["TikTok", "Instagram", "Pinterest"],
+      "demographics": ["Gen Z", "Young Millennials"],
+      "matchingKeywords": ["vintage", "sophisticated", "timeless"],
+      "colorPalette": ["deep burgundy", "forest green", "charcoal", "cream", "navy"]
     },
-    "generated": {
-      "title": "Classic Trench Coat - Cultivate Your Aura",
-      "description": "Elevate your mysterious aura with this timeless trench...",
-      "description_html": "<div class=\"ai-optimized trend-trend_001 luxury\">...</div>",
-      "seo_title": "Classic Trench Coat | Aura Aesthetic Style | Shop Now",
-      "seo_description": "Elevate your mysterious aura with this timeless trench...",
-      "marketing_angle": "Channel your inner mystique with timeless elegance",
-      "suggested_tags": ["ethereal", "mystical", "dreamy"],
-      "color_scheme": "lavender",
-      "layout_style": "luxury",
-      "trust_badges": ["premium", "handcrafted", "limited-edition"],
-      "show_countdown": false,
-      "social_caption": "✨ Classic Trench Coat - Cultivate Your Aura ✨..."
-    },
-    "method": "gemini"
-  }
-]
+    "confidenceScore": 0.92
+  },
+  "status": "pending",
+  "createdAt": "2026-01-18T12:00:00.000Z"
+}
