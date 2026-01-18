@@ -13,6 +13,7 @@ import {
 } from '@shopify/polaris';
 import { ProductIcon, MagicIcon, ChartVerticalFilledIcon } from '@shopify/polaris-icons';
 import { TrendsPanel } from './TrendsPanel';
+import { MarketingPanel } from './MarketingPanel';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -90,6 +91,10 @@ export function HomePage() {
               </BlockStack>
             </Card>
           </InlineGrid>
+        </Layout.Section>
+
+        <Layout.Section>
+          <MarketingPanel />
         </Layout.Section>
 
         <Layout.Section>

@@ -1,0 +1,26 @@
+[
+  {
+    "success": true,
+    "product_id": "gid://shopify/Product/123456789",
+    "trend_name": "Aura Aesthetic",
+    "original": {
+      "title": "Classic Trench Coat",
+      "description": "A timeless trench coat made from premium cotton blend."
+    },
+    "generated": {
+      "title": "Classic Trench Coat - Cultivate Your Aura",
+      "description": "Elevate your mysterious aura with this timeless trench...",
+      "description_html": "<div class=\"ai-optimized trend-trend_001 luxury\">...</div>",
+      "seo_title": "Classic Trench Coat | Aura Aesthetic Style | Shop Now",
+      "seo_description": "Elevate your mysterious aura with this timeless trench...",
+      "marketing_angle": "Channel your inner mystique with timeless elegance",
+      "suggested_tags": ["ethereal", "mystical", "dreamy"],
+      "color_scheme": "lavender",
+      "layout_style": "luxury",
+      "trust_badges": ["premium", "handcrafted", "limited-edition"],
+      "show_countdown": false,
+      "social_caption": "✨ Classic Trench Coat - Cultivate Your Aura ✨..."
+    },
+    "method": "gemini"
+  }
+]
