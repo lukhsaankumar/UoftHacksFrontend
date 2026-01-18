@@ -14,10 +14,36 @@ import {
   ProgressBar,
 } from '@shopify/polaris';
 import { LightbulbIcon } from '@shopify/polaris-icons';
-import { getSuggestions, Suggestion, ReplaceProductData, PriceChangeData } from '@/lib/api';
+import {
+  getSuggestions,
+  Suggestion,
+  ReplaceProductData,
+  PriceChangeData,
+  NewProductData,
+  DescriptionChangeData,
+} from '@/lib/api';
 
-function isReplaceProductData(data: ReplaceProductData | PriceChangeData): data is ReplaceProductData {
-  return 'newProduct' in data;
+function getProductTitle(data: Suggestion['data']): string {
+  if ('newProduct' in data && 'productIdToReplace' in data) {
+    return (data as ReplaceProductData).newProduct.title;
+  }
+  if ('currentPrice' in data && 'newPrice' in data) {
+    return (data as PriceChangeData).productTitle;
+  }
+  if ('product' in data && !('productIdToReplace' in data)) {
+    return (data as NewProductData).product.title;
+  }
+  if ('currentDescription' in data && 'newDescription' in data) {
+    return (data as DescriptionChangeData).productTitle;
+  }
+  return 'Unknown Product';
+}
+
+function getTrendSource(data: Suggestion['data']): string | undefined {
+  if ('trendSource' in data) {
+    return data.trendSource as string | undefined;
+  }
+  return undefined;
 }
 
 export function SuggestionsPanel() {
@@ -49,17 +75,25 @@ export function SuggestionsPanel() {
         return 'Product Replacement';
       case 'price-change':
         return 'Price Optimization';
+      case 'new-product':
+        return 'New Product';
+      case 'description-change':
+        return 'Description Update';
       default:
         return 'Suggestion';
     }
   };
 
-  const getTypeTone = (type: string): 'magic' | 'info' => {
+  const getTypeTone = (type: string): 'magic' | 'info' | 'success' | 'attention' => {
     switch (type) {
       case 'replace-product':
         return 'magic';
       case 'price-change':
         return 'info';
+      case 'new-product':
+        return 'success';
+      case 'description-change':
+        return 'attention';
       default:
         return 'info';
     }
@@ -110,6 +144,8 @@ export function SuggestionsPanel() {
           {suggestions.map((suggestion) => {
             const { _id, type, data } = suggestion;
             const confidencePercent = Math.round(data.confidenceScore * 100);
+            const title = getProductTitle(data);
+            const trendSource = getTrendSource(data);
 
             return (
               <Box
@@ -123,9 +159,7 @@ export function SuggestionsPanel() {
                     <BlockStack gap="100">
                       <InlineStack gap="200" blockAlign="center">
                         <Text variant="headingSm" as="h3" fontWeight="semibold">
-                          {isReplaceProductData(data)
-                            ? data.newProduct.title
-                            : data.productTitle}
+                          {title}
                         </Text>
                         <Badge tone={getTypeTone(type)}>{getTypeLabel(type)}</Badge>
                       </InlineStack>
@@ -146,7 +180,7 @@ export function SuggestionsPanel() {
                         <ProgressBar progress={confidencePercent} tone="primary" size="small" />
                       </Box>
                     </InlineStack>
-                    <Badge tone="success">{data.trendSource}</Badge>
+                    {trendSource && <Badge tone="success">{trendSource}</Badge>}
                   </InlineStack>
                 </BlockStack>
               </Box>
