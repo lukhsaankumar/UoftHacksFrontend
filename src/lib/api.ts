@@ -28,33 +28,6 @@ export interface TrendsResponse {
   count: number;
 }
 
-export interface MarketingGenerated {
-  title: string;
-  description: string;
-  description_html: string;
-  seo_title: string;
-  seo_description: string;
-  marketing_angle: string;
-  suggested_tags: string[];
-  color_scheme: string;
-  layout_style: string;
-  trust_badges: string[];
-  show_countdown: boolean;
-  social_caption: string;
-}
-
-export interface MarketingProduct {
-  success: boolean;
-  product_id: string;
-  trend_name: string;
-  original: {
-    title: string;
-    description: string;
-  };
-  generated: MarketingGenerated;
-  method: string;
-}
-
 export interface Product {
   id: string;
   title: string;
@@ -179,17 +152,6 @@ export interface SuggestionsResponse {
 export const getTrends = async (): Promise<TrendsResponse> => {
   const response = await api.get('/trends');
   return response.data;
-};
-
-export const getMarketingProducts = async (): Promise<MarketingProduct[]> => {
-  // This endpoint may need to be implemented on backend
-  // For now, try to fetch from API, fallback to empty array
-  try {
-    const response = await api.get('/marketing');
-    return response.data.products || [];
-  } catch {
-    return [];
-  }
 };
 
 export const getProducts = async (): Promise<Product[]> => {

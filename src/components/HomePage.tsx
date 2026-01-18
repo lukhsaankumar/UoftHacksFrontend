@@ -11,9 +11,8 @@ import {
   Box,
   InlineGrid,
 } from '@shopify/polaris';
-import { ProductIcon, MagicIcon, ChartVerticalFilledIcon, LightbulbIcon } from '@shopify/polaris-icons';
+import { ProductIcon, MagicIcon, ChartVerticalFilledIcon } from '@shopify/polaris-icons';
 import { TrendsPanel } from './TrendsPanel';
-import { MarketingPanel } from './MarketingPanel';
 import { SuggestionsPanel } from './SuggestionsPanel';
 
 export function HomePage() {
@@ -96,10 +95,6 @@ export function HomePage() {
 
         <Layout.Section>
           <SuggestionsPanel />
-        </Layout.Section>
-
-        <Layout.Section>
-          <MarketingPanel />
         </Layout.Section>
 
         <Layout.Section>
