@@ -56,7 +56,7 @@ function getProductTitle(data: Suggestion['data']): string {
 }
 
 function getTrendSource(data: Suggestion['data']): string | undefined {
-  if (isReplaceProductData(data) || isPriceChangeData(data)) {
+  if ('trendSource' in data) {
     return data.trendSource;
   }
   return undefined;
@@ -230,9 +230,14 @@ export function SuggestionsPage() {
               <Text variant="headingMd" as="h3" fontWeight="bold">
                 {data.productTitle}
               </Text>
-              <Text variant="bodyMd" as="p" tone="subdued">
-                Update product description
-              </Text>
+              {data.trendMatch && (
+                <InlineStack gap="100" wrap>
+                  <Badge tone="magic">{data.trendMatch.trendName}</Badge>
+                  {data.trendMatch.platforms.map((platform) => (
+                    <Badge key={platform} tone="info">{platform}</Badge>
+                  ))}
+                </InlineStack>
+              )}
             </BlockStack>
           )}
 
@@ -336,23 +341,44 @@ export function SuggestionsPage() {
 
               {isDescriptionChangeData(data) && (
                 <>
-                  <InlineStack gap="200" align="space-between">
+                  <BlockStack gap="200">
                     <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
-                      Current
+                      Current Description
                     </Text>
-                    <Text variant="bodySm" as="span">
-                      {data.currentDescription.substring(0, 50)}...
-                    </Text>
-                  </InlineStack>
+                    <Box padding="200" background="bg-surface" borderRadius="100">
+                      <div
+                        className="suggestion-description-preview"
+                        dangerouslySetInnerHTML={{ __html: data.currentDescription }}
+                      />
+                    </Box>
+                  </BlockStack>
                   <Divider />
-                  <InlineStack gap="200" align="space-between">
-                    <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
-                      New
-                    </Text>
+                  <BlockStack gap="200">
                     <Text variant="bodySm" as="span" fontWeight="semibold" tone="success">
-                      {data.newDescription.substring(0, 50)}...
+                      New Description
                     </Text>
-                  </InlineStack>
+                    <Box padding="200" background="bg-surface-success" borderRadius="100">
+                      <div
+                        className="suggestion-description-preview aura-enhanced"
+                        dangerouslySetInnerHTML={{ __html: data.newDescription }}
+                      />
+                    </Box>
+                  </BlockStack>
+                  {data.newTags && data.newTags.length > 0 && (
+                    <>
+                      <Divider />
+                      <BlockStack gap="100">
+                        <Text variant="bodySm" as="span" fontWeight="semibold" tone="subdued">
+                          New Tags
+                        </Text>
+                        <InlineStack gap="100" wrap>
+                          {data.newTags.map((tag) => (
+                            <Badge key={tag} tone="success">{tag}</Badge>
+                          ))}
+                        </InlineStack>
+                      </BlockStack>
+                    </>
+                  )}
                 </>
               )}
 
