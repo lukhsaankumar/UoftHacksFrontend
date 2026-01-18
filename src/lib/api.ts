@@ -146,7 +146,6 @@ export interface DescriptionChangeData {
   newTags?: string[];
   reason: string;
   trendSource?: string;
-<<<<<<< HEAD
   trendMatch?: {
     trendId: string;
     trendName: string;
@@ -155,9 +154,6 @@ export interface DescriptionChangeData {
     matchingKeywords?: string[];
     colorPalette?: string[];
   };
-=======
-  trendMatch?: TrendMatch;
->>>>>>> 108ee2eb57d0aca5e8e08ede80c2708ee0b69a64
   confidenceScore: number;
 }
 
